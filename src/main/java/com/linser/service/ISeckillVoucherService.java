@@ -1,0 +1,16 @@
+package com.linser.service;
+
+import com.linser.entity.SeckillVoucher;
+import com.baomidou.mybatisplus.extension.service.IService;
+
+/**
+ * <p>
+ * 秒杀优惠券表，与优惠券是一对一关系 服务类
+ * </p>
+ *
+ * @author linser
+ * @since 2026-04-16
+ */
+public interface ISeckillVoucherService extends IService<SeckillVoucher> {
+
+}
