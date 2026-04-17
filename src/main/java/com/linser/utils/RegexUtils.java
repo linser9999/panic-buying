@@ -9,7 +9,7 @@ public class RegexUtils {
     /**
      * 是否是无效手机格式
      * @param phone 要校验的手机号
-     * @return true:符合，false：不符合
+     * @return true:不符合，false：符合
      */
     public static boolean isPhoneInvalid(String phone){
         return mismatch(phone, RegexPatterns.PHONE_REGEX);
@@ -30,6 +30,15 @@ public class RegexUtils {
      */
     public static boolean isCodeInvalid(String code){
         return mismatch(code, RegexPatterns.VERIFY_CODE_REGEX);
+    }
+
+    /**
+     * 是否是无效QQ号码格式
+     * @param qq 要校验的QQ号
+     * @return true:不符合，false：符合
+     */
+    public static boolean isQQInvalid(String qq){
+        return mismatch(qq, RegexPatterns.QQ_REGEX);
     }
 
     // 校验是否不符合正则格式

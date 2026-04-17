@@ -20,5 +20,9 @@ public abstract class RegexPatterns {
      * 验证码正则, 6位数字或字母
      */
     public static final String VERIFY_CODE_REGEX = "^[a-zA-Z\\d]{6}$";
+    /**
+     * QQ号正则, 5~11位数字
+     */
+    public static final String QQ_REGEX = "^[1-9]\\d{4,10}$";
 
 }

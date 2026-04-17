@@ -2,8 +2,24 @@ server:
   port: 8081
 
 spring:
+  profiles:
+    active: dev
   application:
     name: panic-buying
+
+  # qq邮箱
+  mail:
+    host: ${panic-buying.mail.host}
+    username: ${panic-buying.mail.username}
+    password: ${panic-buying.mail.password}
+    default-encoding: ${panic-buying.mail.default-encoding}
+    port: ${panic-buying.mail.port}
+    properties:
+      mail:
+        smtp:
+          auth: true       # 必须认证
+          ssl:
+            enable: true
 
 
   datasource:
@@ -12,23 +28,30 @@ spring:
     username: root
     password: Fems.lhy1
 
-  data:
-    redis:
-      host: 192.168.100.128
-      port: 6379
-      password: 123321
-      lettuce:
-        pool:
-          max-active: 10
-          max-idle: 10
-          min-idle: 1
-          time-between-eviction-runs: 10s
+
+  redis:
+    host: 192.168.100.128
+    port: 6379
+    password: 123321
+    timeout: 5000
+    lettuce:
+      pool:
+        max-idle: 8
+        max-active: 8
+        max-wait: 1000
+        min-idle: 0
+
 
   jackson:
     default-property-inclusion: non_null # JSON处理时忽略非空字段
 
 mybatis-plus:
   type-aliases-package: com.linser.entity # 别名扫描包
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      table-prefix: tb_
 logging:
   level:
-    com.hmdp: debug
+    com.linser: debug
