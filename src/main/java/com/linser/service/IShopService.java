@@ -1,5 +1,6 @@
 package com.linser.service;
 
+import com.linser.dto.Result;
 import com.linser.entity.Shop;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IShopService extends IService<Shop> {
 
+    Result queryShopById(Long id);
+
+    Result updateShop(Shop shop);
+
+    void yuReHotKey(String key, Long id);
 }

@@ -1,9 +1,12 @@
 package com.linser.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -19,6 +22,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
+@TableName("tb_blog")
 public class Blog implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,16 +32,29 @@ public class Blog implements Serializable {
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-
     /**
      * 商户id
      */
     private Long shopId;
-
     /**
      * 用户id
      */
     private Long userId;
+    /**
+     * 用户图标
+     */
+    @TableField(exist = false)
+    private String icon;
+    /**
+     * 用户姓名
+     */
+    @TableField(exist = false)
+    private String name;
+    /**
+     * 是否点赞过了
+     */
+    @TableField(exist = false)
+    private Boolean isLike;
 
     /**
      * 标题

@@ -5,6 +5,8 @@ import com.linser.dto.LoginFormDTO;
 import com.linser.dto.Result;
 import com.linser.dto.UserDTO;
 import com.linser.entity.User;
+import com.linser.entity.UserInfo;
+import com.linser.service.IUserInfoService;
 import com.linser.service.IUserService;
 import com.linser.service.impl.UserServiceImpl;
 import com.linser.utils.UserHolder;
@@ -36,6 +38,8 @@ public class UserController {
     private IUserService userService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private IUserInfoService userInfoService;
 
     /**
      * 用户申请获取验证码
@@ -84,5 +88,19 @@ public class UserController {
         // 移除 redis 中的用户信息
         stringRedisTemplate.delete(LOGIN_USER_KEY + token);
         return Result.ok();
+    }
+
+    @GetMapping("/info/{id}")
+    public Result info(@PathVariable("id") Long userId){
+        // 查询详情
+        UserInfo info = userInfoService.getById(userId);
+        if (info == null) {
+            // 没有详情，应该是第一次查看详情
+            return Result.ok();
+        }
+        info.setCreateTime(null);
+        info.setUpdateTime(null);
+        // 返回
+        return Result.ok(info);
     }
 }
