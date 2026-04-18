@@ -55,10 +55,10 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         // shop = huanCunChuangTou(key, id);
 
         // 互斥锁解决缓存击穿
-        // shop = huChiSuo(key, id);
+        shop = huChiSuo(key, id);
 
         // 逻辑过期时间解决缓存击穿
-        shop = luoJiGuoQI(key, id);
+        // shop = luoJiGuoQI(key, id);
 
         if (shop == null) {
             return Result.fail(DATABASE_WITHOUT_DATA);
@@ -162,7 +162,8 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
             // 缓存没有重建，说明该线程 获取锁成功并需要缓存重建
             // 缓存重建
-            this.huanCunChongJian(key, id);
+            shop = this.huanCunChongJian(key, id);
+
             // 模拟缓存重建延迟
             Thread.sleep(200);
 
@@ -285,7 +286,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
      * @param key
      * @param id
      */
-    private void huanCunChongJian(String key, Long id) {
+    private Shop huanCunChongJian(String key, Long id) {
         // 查询数据库
         Shop shop = getById(id);
 
@@ -299,5 +300,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         // 缓存数据
         stringRedisTemplate.opsForValue()
                 .set(key, JSONUtil.toJsonStr(shop), CACHE_SHOP_TTL, TimeUnit.MINUTES);
+
+        return shop;
     }
 }
