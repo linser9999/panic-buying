@@ -8,8 +8,10 @@ import com.linser.service.IVoucherOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.linser.utils.RedisIdWorker;
 import com.linser.utils.UserHolder;
+import com.linser.utils.lock.impl.RedisLock;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,8 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     private VoucherOrderServiceImpl voucherOrderService;
     @Autowired
     private RedisIdWorker redisIdWorker;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     /**
      * 优惠券下单
@@ -73,11 +77,36 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         Long userId = UserHolder.getUser().getId();
 
         // 先上锁， 再开启事务
-        synchronized(userId.toString().intern()) {
-            // 获取代理对象
+        /**
+         * 使用基于 redis 实现的分布式锁1
+         */
+        // 获取锁对象
+        RedisLock redisLock = new RedisLock(stringRedisTemplate, "seckillVoucherOrder");
+
+        // 尝试获取锁
+        boolean success = redisLock.onLock(1200);
+
+        if (!success) {
+            // 获取锁失败
+            return Result.fail(USER_ALREADY_BUY);
+        }
+
+        try {
             IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
             return proxy.xiaDanSeckillVoucher(voucherId, now);
+        } finally {
+            redisLock.unLock();
         }
+
+
+        /**
+         * 使用 synchronized 上锁
+         */
+        // synchronized(userId.toString().intern()) {
+        //     // 获取代理对象
+        //     IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+        //     return proxy.xiaDanSeckillVoucher(voucherId, now);
+        // }
 
     }
 
