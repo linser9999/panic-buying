@@ -43,7 +43,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         // 从 redis 中获取 用户信息
         String userJson = stringRedisTemplate.opsForValue().get(LOGIN_USER_KEY + token);
 
-        if (userJson.isEmpty()) {
+        if (StrUtil.isBlank(userJson)) {
             response.setStatus(401);
             return false;
         }

@@ -1,7 +1,10 @@
 package com.linser.service;
 
+import com.linser.dto.Result;
 import com.linser.entity.VoucherOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -13,4 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IVoucherOrderService extends IService<VoucherOrder> {
 
+    Result seckillVoucher(Long voucherId);
+
+    Result xiaDanSeckillVoucher(Long voucherId, LocalDateTime now);
 }

@@ -1,6 +1,7 @@
 package com.linser.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
@@ -79,5 +80,21 @@ public class Voucher implements Serializable {
      */
     private LocalDateTime updateTime;
 
+    /**
+     * 库存
+     */
+    @TableField(exist = false)
+    private Integer stock;
 
+    /**
+     * 生效时间
+     */
+    @TableField(exist = false)
+    private LocalDateTime beginTime;
+
+    /**
+     * 失效时间
+     */
+    @TableField(exist = false)
+    private LocalDateTime endTime;
 }

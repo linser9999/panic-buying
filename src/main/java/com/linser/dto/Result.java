@@ -24,6 +24,11 @@ public class Result {
     public static Result ok(List<?> data, Long total){
         return new Result(true, null, data, total);
     }
+
+    /**
+     * @param errorMsg
+     * @return {@link Result }
+     */
     public static Result fail(String errorMsg){
         return new Result(false, errorMsg, null, null);
     }

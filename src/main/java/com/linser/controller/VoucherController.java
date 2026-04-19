@@ -40,7 +40,7 @@ public class VoucherController {
      */
     @PostMapping("seckill")
     public Result addSeckillVoucher(@RequestBody Voucher voucher) {
-        // voucherService.addSeckillVoucher(voucher);
+        voucherService.addSeckillVoucher(voucher);
         return Result.ok(voucher.getId());
     }
 
@@ -51,7 +51,6 @@ public class VoucherController {
      */
     @GetMapping("/list/{shopId}")
     public Result queryVoucherOfShop(@PathVariable("shopId") Long shopId) {
-        // return voucherService.queryVoucherOfShop(shopId);
-        return Result.ok();
+        return voucherService.queryVoucherOfShop(shopId);
     }
 }

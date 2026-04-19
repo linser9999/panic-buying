@@ -24,11 +24,11 @@ import static com.linser.utils.RedisConstants.*;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author linser
- * @since 2026-04-16
+ * @date 2026/04/18
  */
 @Service
 public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IShopService {
