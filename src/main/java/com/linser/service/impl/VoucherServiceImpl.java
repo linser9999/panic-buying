@@ -1,6 +1,9 @@
 package com.linser.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.map.MapUtil;
 import com.linser.dto.Result;
+import com.linser.entity.RedisOrder;
 import com.linser.entity.SeckillVoucher;
 import com.linser.entity.Voucher;
 import com.linser.mapper.VoucherMapper;
@@ -11,7 +14,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.linser.utils.RedisConstants.SECKILL_STOCK_KEY;
 
@@ -48,7 +55,26 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
         seckillVoucher.setEndTime(voucher.getEndTime());
         seckillVoucherService.save(seckillVoucher);
         // 保存秒杀库存到Redis中
-        stringRedisTemplate.opsForValue().set(SECKILL_STOCK_KEY + voucher.getId(), voucher.getStock().toString());
+        RedisOrder redisOrder = RedisOrder.builder()
+                .stock(seckillVoucher.getStock())
+                .beginTime(seckillVoucher.getBeginTime())
+                .endTime(seckillVoucher.getEndTime())
+                .build();
+        // stringRedisTemplate.opsForValue().set(SECKILL_STOCK_KEY + voucher.getId(), voucher.getStock().toString());
+        Map<String, Object> originalMap = BeanUtil.beanToMap(redisOrder);
+        Map<String, String> stringMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : originalMap.entrySet()) {
+            if (entry.getValue() != null) {
+                // 如果是时间类型，转为时间戳字符串
+                if (entry.getValue() instanceof LocalDateTime) {
+                    long timestamp = ((LocalDateTime) entry.getValue()).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                    stringMap.put(entry.getKey(), String.valueOf(timestamp));
+                } else {
+                    stringMap.put(entry.getKey(), entry.getValue().toString());
+                }
+            }
+        }
+        stringRedisTemplate.opsForHash().putAll(SECKILL_STOCK_KEY + voucher.getId(), stringMap);
     }
 
     /**

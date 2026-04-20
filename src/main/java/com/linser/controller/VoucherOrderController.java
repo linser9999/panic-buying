@@ -33,6 +33,10 @@ public class VoucherOrderController {
      */
     @PostMapping("seckill/{id}")
     public Result seckillVoucher(@PathVariable("id") Long voucherId) {
-        return voucherOrderService.seckillVoucher(voucherId);
+        try {
+            return voucherOrderService.seckillVoucher(voucherId);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

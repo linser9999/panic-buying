@@ -43,8 +43,16 @@ spring:
         min-idle: 0
 
 
+
   jackson:
     default-property-inclusion: non_null # JSON处理时忽略非空字段
+
+  rabbitmq:
+    port: ${rabbitmq.port}
+    host: ${rabbitmq.host}
+    virtual-host: ${rabbitmq.virtual-host}
+    username: ${rabbitmq.username}
+    password: ${rabbitmq.password}
 
 mybatis-plus:
   type-aliases-package: com.linser.entity # 别名扫描包
